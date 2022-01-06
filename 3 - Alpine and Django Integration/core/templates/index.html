@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div x-data="{bands: [], genres: []}" 
+     x-init="bands = await (await fetch('/api/bands/')).json()">
+    
+     {% render_field form.genre autocomplete="off" @change="genres = changeGenres($el, genres)" %}
+
+    <hr/>
+
+    <template x-for="band in bands.filter(b => genres.includes(b.genre))">
+        <div>
+            <p x-text="`${band.name} - ${band.genre}`"></p>
+        </div>
+    </template>
+
+</div>
+
+
+<script>
+
+function changeGenres(el, genres) {
+    const genre = el.value
+    console.log(genres, genre)
+    // if (genres.indexOf(genre) != -1) {
+    if (genres.includes(genre)) {
+        return genres.filter(g => g != genre)
+    } else {
+        return [...genres, genre]
+    }
+}
+
+</script>
+
+{% endblock %}

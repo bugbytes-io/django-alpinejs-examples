@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+<!-- https://alpinejs.dev/start-here#building-a-counter -->
+<div x-data="{count: 0}" class="mb-3">
+    <input type="number" x-model="count"/>
+    <br/>
+
+    <button @click="count++">Increment</button>
+
+    <button @click="count *= count">Square</button>
+
+    <span x-text="count"></span>
+</div>
+
+<div x-data="{people: [], showImages: false }"
+     x-init="people = await (await fetch('/people/')).json()">
+     
+    <button @click="showImages = !showImages" 
+            x-text="showImages ? 'Hide Images' : 'Show Images'"></button>
+
+    <template x-for="person in people">
+        <div>
+            <p x-text="person.name" :class="person.name.startsWith('M') ? 'text-danger' : 'text-success'"></p>
+            <img x-show="showImages" :src="person.image" x-transition.duration.1500ms />
+            <hr />
+        </div>
+    </template>
+
+</div>
+
+{% endblock %}
